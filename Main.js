@@ -916,73 +916,127 @@ The heap :
 // electric.accelerate();
 // electric.accelerate();
 
-class Account {
-  // Public Fields
-  locale = navigator.language;
+// class Account {
+//   // Public Fields
+//   locale = navigator.language;
 
-  // Private Fields
-  #movements = [];
-  #pin;
+//   // Private Fields
+//   #movements = [];
+//   #pin;
 
-  constructor(owner, currencey, pin) {
-    this.owner = owner;
-    this.currencey = currencey;
-    this.#pin = pin;
-    // this.movements = [];
-    // this.locale = navigator.language;
+//   constructor(owner, currencey, pin) {
+//     this.owner = owner;
+//     this.currencey = currencey;
+//     this.#pin = pin;
+//     // this.movements = [];
+//     // this.locale = navigator.language;
+//   }
+
+//   //Public Method
+//   getMovements() {
+//     return this.#movements;
+//   }
+//   deposit(val) {
+//     this.#movements.push(val);
+//     return this;
+//   }
+
+//   withdrawe(val) {
+//     this.deposit(-val);
+//     return this;
+//   }
+
+//   requestLoan(val) {
+//     // if (this.#approvedLoan(val)) {
+//     if (this._approvedLoan(val)) {
+//       this.deposit(val);
+//       console.log('Loan Approved');
+//       return this;
+//     }
+//   }
+
+//   //Private Method
+//   //   #approvedLoan(val) { is act as private field not method
+//   _approvedLoan(val) {
+//     if (val > 0) return true;
+//   }
+
+//   //Static Version
+//   // call it using class
+//   static helper() {
+//     console.log('Helper');
+//   }
+// }
+
+// const jonas = new Account('Jonas', 'Euro', 1111);
+
+// jonas.deposit(400);
+// jonas.withdrawe(200);
+// jonas.requestLoan(300);
+
+// console.log(jonas.getMovements());
+// Account.helper();
+
+// // Chaining
+// // add return this at the end to all methods make it return the object itself make u can chain
+
+// jonas.deposit(40000).deposit(500000).withdrawe(600).requestLoan(53000);
+
+// console.log(jonas);
+
+// Coding Challenge 4
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
   }
 
-  //Public Method
-  getMovements() {
-    return this.#movements;
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make}: Speed is ${this.speed}km/h after increaseing`);
   }
-  deposit(val) {
-    this.#movements.push(val);
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make}: Speed is ${this.speed}km/h after decreaseing`);
     return this;
   }
 
-  withdrawe(val) {
-    this.deposit(-val);
-    return this;
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
   }
-
-  requestLoan(val) {
-    // if (this.#approvedLoan(val)) {
-    if (this._approvedLoan(val)) {
-      this.deposit(val);
-      console.log('Loan Approved');
-      return this;
-    }
-  }
-
-  //Private Method
-  //   #approvedLoan(val) { is act as private field not method
-  _approvedLoan(val) {
-    if (val > 0) return true;
-  }
-
-  //Static Version
-  // call it using class
-  static helper() {
-    console.log('Helper');
+  get speedUS() {
+    return `The current speed of ${this.make} is ${this.speed / 1.6} mi/h`;
   }
 }
 
-const jonas = new Account('Jonas', 'Euro', 1111);
+class EVCl extends CarCl {
+  #charge;
 
-jonas.deposit(400);
-jonas.withdrawe(200);
-jonas.requestLoan(300);
+  constructor(make, speed, charge) {
+    super(make, speed);
 
-console.log(jonas.getMovements());
-Account.helper();
+    this.#charge = charge;
+  }
 
-// Chaining
-// add return this at the end to all methods make it return the object itself make u can chain
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
 
-jonas.deposit(40000).deposit(500000).withdrawe(600).requestLoan(53000);
+  accelerate() {
+    this.speed += 20;
+    this.#charge -= 1;
+    console.log(
+      `Tesla going at ${this.speed}km/h, with a charge of ${this.#charge}`
+    );
+    return this;
+  }
+}
 
-console.log(jonas);
+const car1 = new EVCl('Rivian', 120, 23);
+console.log(car1);
+car1.brake().accelerate().chargeBattery(50).accelerate().accelerate();
 
 // Trick
 // const { length } = 'hello';
