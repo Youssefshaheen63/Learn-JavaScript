@@ -936,19 +936,22 @@ class Account {
   getMovements() {
     return this.#movements;
   }
-  deposite(val) {
+  deposit(val) {
     this.#movements.push(val);
+    return this;
   }
 
   withdrawe(val) {
-    this.deposite(-val);
+    this.deposit(-val);
+    return this;
   }
 
   requestLoan(val) {
     // if (this.#approvedLoan(val)) {
     if (this._approvedLoan(val)) {
-      this.deposite(val);
+      this.deposit(val);
       console.log('Loan Approved');
+      return this;
     }
   }
 
@@ -967,14 +970,21 @@ class Account {
 
 const jonas = new Account('Jonas', 'Euro', 1111);
 
-jonas.deposite(400);
+jonas.deposit(400);
 jonas.withdrawe(200);
 jonas.requestLoan(300);
 
-console.log(jonas);
 console.log(jonas.getMovements());
 Account.helper();
 
+// Chaining
+// add return this at the end to all methods make it return the object itself make u can chain
+
+jonas.deposit(40000).deposit(500000).withdrawe(600).requestLoan(53000);
+
+console.log(jonas);
+
+// Trick
 // const { length } = 'hello';
 // console.log(length);
 /**
