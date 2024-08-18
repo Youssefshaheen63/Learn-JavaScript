@@ -916,20 +916,23 @@ The heap :
 // electric.accelerate();
 // electric.accelerate();
 
-class account {
+class Account {
   // Public Fields
   locale = navigator.language;
 
   // Private Fields
   #movements = [];
+  #pin;
+
   constructor(owner, currencey, pin) {
     this.owner = owner;
     this.currencey = currencey;
-    this._pin = pin;
+    this.#pin = pin;
     // this.movements = [];
     // this.locale = navigator.language;
   }
 
+  //Public Method
   getMovements() {
     return this.#movements;
   }
@@ -941,19 +944,28 @@ class account {
     this.deposite(-val);
   }
 
-  approvedLoan(val) {
-    if (val > 0) return true;
-  }
-
   requestLoan(val) {
-    if (this.approvedLoan(val)) {
+    // if (this.#approvedLoan(val)) {
+    if (this._approvedLoan(val)) {
       this.deposite(val);
       console.log('Loan Approved');
     }
   }
+
+  //Private Method
+  //   #approvedLoan(val) { is act as private field not method
+  _approvedLoan(val) {
+    if (val > 0) return true;
+  }
+
+  //Static Version
+  // call it using class
+  static helper() {
+    console.log('Helper');
+  }
 }
 
-const jonas = new account('Jonas', 'Euro', 1111);
+const jonas = new Account('Jonas', 'Euro', 1111);
 
 jonas.deposite(400);
 jonas.withdrawe(200);
@@ -961,6 +973,7 @@ jonas.requestLoan(300);
 
 console.log(jonas);
 console.log(jonas.getMovements());
+Account.helper();
 
 // const { length } = 'hello';
 // console.log(length);
