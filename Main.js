@@ -986,57 +986,57 @@ The heap :
 
 // Coding Challenge 4
 
-class CarCl {
-  constructor(make, speed) {
-    this.make = make;
-    this.speed = speed;
-  }
+// class CarCl {
+//   constructor(make, speed) {
+//     this.make = make;
+//     this.speed = speed;
+//   }
 
-  accelerate() {
-    this.speed += 10;
-    console.log(`${this.make}: Speed is ${this.speed}km/h after increaseing`);
-  }
-  brake() {
-    this.speed -= 5;
-    console.log(`${this.make}: Speed is ${this.speed}km/h after decreaseing`);
-    return this;
-  }
+//   accelerate() {
+//     this.speed += 10;
+//     console.log(`${this.make}: Speed is ${this.speed}km/h after increaseing`);
+//   }
+//   brake() {
+//     this.speed -= 5;
+//     console.log(`${this.make}: Speed is ${this.speed}km/h after decreaseing`);
+//     return this;
+//   }
 
-  set speedUS(speed) {
-    this.speed = speed * 1.6;
-  }
-  get speedUS() {
-    return `The current speed of ${this.make} is ${this.speed / 1.6} mi/h`;
-  }
-}
+//   set speedUS(speed) {
+//     this.speed = speed * 1.6;
+//   }
+//   get speedUS() {
+//     return `The current speed of ${this.make} is ${this.speed / 1.6} mi/h`;
+//   }
+// }
 
-class EVCl extends CarCl {
-  #charge;
+// class EVCl extends CarCl {
+//   #charge;
 
-  constructor(make, speed, charge) {
-    super(make, speed);
+//   constructor(make, speed, charge) {
+//     super(make, speed);
 
-    this.#charge = charge;
-  }
+//     this.#charge = charge;
+//   }
 
-  chargeBattery(chargeTo) {
-    this.#charge = chargeTo;
-    return this;
-  }
+//   chargeBattery(chargeTo) {
+//     this.#charge = chargeTo;
+//     return this;
+//   }
 
-  accelerate() {
-    this.speed += 20;
-    this.#charge -= 1;
-    console.log(
-      `Tesla going at ${this.speed}km/h, with a charge of ${this.#charge}`
-    );
-    return this;
-  }
-}
+//   accelerate() {
+//     this.speed += 20;
+//     this.#charge -= 1;
+//     console.log(
+//       `Tesla going at ${this.speed}km/h, with a charge of ${this.#charge}`
+//     );
+//     return this;
+//   }
+// }
 
-const car1 = new EVCl('Rivian', 120, 23);
-console.log(car1);
-car1.brake().accelerate().chargeBattery(50).accelerate().accelerate();
+// const car1 = new EVCl('Rivian', 120, 23);
+// console.log(car1);
+// car1.brake().accelerate().chargeBattery(50).accelerate().accelerate();
 
 // Trick
 // const { length } = 'hello';
@@ -1050,3 +1050,41 @@ car1.brake().accelerate().chargeBattery(50).accelerate().accelerate();
 	and store that length in a variable named length.
 	The word 'hello' has 5 characters, so the length becomes 5. 
  */
+
+// Section Asynchronous JavaScript Promises, AsyncAwait, and AJAX
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
+
+const getData = function (country) {
+  const request = new XMLHttpRequest();
+
+  request.open('GET', `https://restcountries.com/v2/name/${country}`);
+  request.send();
+
+  // We can not put data into variable because is load in the background and that is Asynchronous
+  // to get data do this
+  request.addEventListener('load', function () {
+    const [data] = JSON.parse(this.responseText);
+    const html = `
+		<article class="country">
+			<img class="country__img" src="${data.flag}" />
+			<div class="country__data">
+				<h3 class="country__name">${data.name}</h3>
+				<h4 class="country__region">${data.region}</h4>
+				<p class="country__row"><span>👫</span>${(+data.population / 1000000).toFixed(
+          1
+        )}M people</p>
+				<p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+				<p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+			</div>
+		</article> 
+  `;
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+
+getData('portugal');
+getData('egypt');
+getData('USA');
+getData('China');
