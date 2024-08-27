@@ -1071,12 +1071,12 @@ const renderCountry = function (data, className = '') {
 		  </article> 
 	`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  //   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  //   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 // const getData = function (country) {
@@ -1226,28 +1226,67 @@ const getJSON = function (url, errorMsg = 'country not found') {
 //     .finally(() => (countriesContainer.style.opacity = 1));
 // };
 
-const getCountryData = function (country) {
-  // Country 1
-  getJSON(`https://restcountries.com/v2/name/${country}`)
+// const getCountryData = function (country) {
+//   // Country 1
+//   getJSON(`https://restcountries.com/v2/name/${country}`)
+//     .then(data => {
+//       renderCountry(data[0]);
+//       // Country 2
+//       const neighbour = data[0].borders?.[0];
+
+//       if (!neighbour) throw new Error('no neighbour found');
+//       return getJSON(`https://restcountries.com/v2/alpha/${neighbour}`);
+//     })
+//     .then(data => renderCountry(data, 'neighbour'))
+//     .catch(err => {
+//       // Catch return a promise
+//       console.error(`${err} 🚫`);
+//       renderError(`Something went wrong ${err.message}. Try again!`);
+//     })
+//     .finally(() => (countriesContainer.style.opacity = 1));
+// };
+
+// btn.addEventListener('click', function () {
+//   //   getCountryData('portugal');
+//   getCountryData('australia');
+//   //   getCountryData('hjgiuyr');
+// });
+
+// Coding Challenge #1
+
+const whereAmI = function (lat, lng) {
+  fetch(
+    `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+  )
+    .then(response => {
+      console.log(response);
+      if (!response.ok)
+        throw new Error(`Can not get Country now ${response.status}`);
+
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      const [res] = data.results;
+      console.log(res);
+
+      console.log(`You are in ${res.city}, ${res.country}`);
+
+      return fetch(`https://restcountries.com/v2/name/${res.country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`country not found ${response.status}`);
+      return response.json();
+    })
     .then(data => {
       renderCountry(data[0]);
-      // Country 2
-      const neighbour = data[0].borders?.[0];
-
-      if (!neighbour) throw new Error('no neighbour found');
-      return getJSON(`https://restcountries.com/v2/alpha/${neighbour}`);
     })
-    .then(data => renderCountry(data, 'neighbour'))
-    .catch(err => {
-      // Catch return a promise
-      console.error(`${err} 🚫`);
-      renderError(`Something went wrong ${err.message}. Try again!`);
-    })
-    .finally(() => (countriesContainer.style.opacity = 1));
+    .catch(err => console.log(err.message));
 };
+/**
+Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
+Coordinates 2: 19.037, 72.873
+Coordinates 3: -33.933, 18.474
+ */
 
-btn.addEventListener('click', function () {
-  //   getCountryData('portugal');
-  getCountryData('australia');
-  //   getCountryData('hjgiuyr');
-});
+whereAmI(4.0383, 21.7587);
