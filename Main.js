@@ -1254,39 +1254,77 @@ const getJSON = function (url, errorMsg = 'country not found') {
 
 // Coding Challenge #1
 
-const whereAmI = function (lat, lng) {
-  fetch(
-    `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
-  )
-    .then(response => {
-      console.log(response);
-      if (!response.ok)
-        throw new Error(`Can not get Country now ${response.status}`);
+// const whereAmI = function (lat, lng) {
+//   fetch(
+//     `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+//   )
+//     .then(response => {
+//       console.log(response);
+//       if (!response.ok)
+//         throw new Error(`Can not get Country now ${response.status}`);
 
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      const [res] = data.results;
-      console.log(res);
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       const [res] = data.results;
+//       console.log(res);
 
-      console.log(`You are in ${res.city}, ${res.country}`);
+//       console.log(`You are in ${res.city}, ${res.country}`);
 
-      return fetch(`https://restcountries.com/v2/name/${res.country}`);
-    })
-    .then(response => {
-      if (!response.ok) throw new Error(`country not found ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      renderCountry(data[0]);
-    })
-    .catch(err => console.log(err.message));
+//       return fetch(`https://restcountries.com/v2/name/${res.country}`);
+//     })
+//     .then(response => {
+//       if (!response.ok) throw new Error(`country not found ${response.status}`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//     })
+//     .catch(err => console.log(err.message));
+// };
+// /**
+// Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
+// Coordinates 2: 19.037, 72.873
+// Coordinates 3: -33.933, 18.474
+//  */
+
+// whereAmI(4.0383, 21.7587);
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lotter draw is happening ');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You Win 💰');
+    } else {
+      reject('You Lost 💩');
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+// Promisifying setTimeout
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
 };
-/**
-Coordinates 1: 52.508, 13.381 (Latitude, Longitude)
-Coordinates 2: 19.037, 72.873
-Coordinates 3: -33.933, 18.474
- */
 
-whereAmI(4.0383, 21.7587);
+wait(1)
+  .then(() => {
+    console.log('1 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('4 second passed');
+  });
