@@ -1431,20 +1431,28 @@ const getPosition = function () {
 };
 
 const whereAmI = async function () {
-  const pos = await getPosition();
-  const { latitude: lat, longitude: lng } = pos.coords;
-  const resLoc = await fetch(
-    `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
-  );
-  const loc = await resLoc.json();
-  const [countryData] = loc.results;
+  try {
+    const pos = await getPosition();
+    const { latitude: lat, longitude: lng } = pos.coords;
+    const resLoc = await fetch(
+      `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+    );
+    if (!resLoc.ok)
+      throw new Error(`Can not get Country now ${response.status}`);
+    const loc = await resLoc.json();
+    const [countryData] = loc.results;
 
-  const res = await fetch(
-    `https://restcountries.com/v2/name/${countryData.country}`
-  );
-  const data = await res.json();
-  const [result] = data;
-  renderCountry(result);
+    const res = await fetch(
+      `https://restcountries.com/v2/name/${countryData.country}`
+    );
+    if (!res.ok) throw new Error(`country not found ${response.status}`);
+
+    const data = await res.json();
+    const [result] = data;
+    renderCountry(result);
+  } catch (err) {
+    renderError(`${err.message}`);
+  }
 };
 whereAmI();
 console.log('First');
