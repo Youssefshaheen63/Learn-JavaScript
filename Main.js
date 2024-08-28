@@ -1054,7 +1054,7 @@ The heap :
 // Section Asynchronous JavaScript Promises, AsyncAwait, and AJAX
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
-
+const images = document.querySelector('.images');
 const renderCountry = function (data, className = '') {
   const html = `
 		  <article class="country ${className}">
@@ -1329,44 +1329,97 @@ const getJSON = function (url, errorMsg = 'country not found') {
 //     console.log('4 second passed');
 //   });
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
 
 // getPosition().then(pos => console.log(pos));
 
-const whereAmI = function (lat, lng) {
-  getPosition()
-    .then(pos => {
-      console.log(pos);
-      const { latitude: lat, longitude: lng } = pos.coords;
-      return fetch(
-        `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
-      );
-    })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`Can not get Country now ${response.status}`);
+// const whereAmI = function (lat, lng) {
+//   getPosition()
+//     .then(pos => {
+//       console.log(pos);
+//       const { latitude: lat, longitude: lng } = pos.coords;
+//       return fetch(
+//         `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+//       );
+//     })
+//     .then(response => {
+//       if (!response.ok)
+//         throw new Error(`Can not get Country now ${response.status}`);
 
-      return response.json();
-    })
-    .then(data => {
-      const [res] = data.results;
+//       return response.json();
+//     })
+//     .then(data => {
+//       const [res] = data.results;
 
-      console.log(`You are in ${res.state}, ${res.country}`);
+//       console.log(`You are in ${res.state}, ${res.country}`);
 
-      return fetch(`https://restcountries.com/v2/name/${res.country}`);
-    })
-    .then(response => {
-      if (!response.ok) throw new Error(`country not found ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      renderCountry(data[0]);
-    })
-    .catch(err => console.log(err.message));
+//       return fetch(`https://restcountries.com/v2/name/${res.country}`);
+//     })
+//     .then(response => {
+//       if (!response.ok) throw new Error(`country not found ${response.status}`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//     })
+//     .catch(err => console.log(err.message));
+// };
+
+// btn.addEventListener('click', whereAmI);
+
+// Coding Challenge #2
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
 };
 
-btn.addEventListener('click', whereAmI);
+const createImg = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const newImg = document.createElement('img');
+    newImg.src = imgPath;
+    newImg.addEventListener('load', function () {
+      images.append(newImg);
+      resolve(newImg);
+    });
+
+    newImg.addEventListener('error', function () {
+      reject(new Error('Image not found'));
+    });
+  });
+};
+
+let currentImg;
+createImg('img/img-1.jpg')
+  .then(img => {
+    currentImg = img;
+    console.log('Image 1 Loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImg('img/img-2.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    console.log('Image 2 Loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+    return createImg('img/img-3.jpg');
+  })
+  .then(img => {
+    currentImg = img;
+    console.log('Image 3 Loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currentImg.style.display = 'none';
+  })
+  .catch(err => console.error(err));
