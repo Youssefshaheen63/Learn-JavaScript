@@ -1424,41 +1424,41 @@ const getJSON = function (url, errorMsg = 'country not found') {
 //   })
 //   .catch(err => console.error(err));
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
 
-const whereAmI = async function () {
-  try {
-    const pos = await getPosition();
-    const { latitude: lat, longitude: lng } = pos.coords;
-    const resLoc = await fetch(
-      `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
-    );
-    if (!resLoc.ok)
-      throw new Error(`Can not get Country now ${response.status}`);
-    const loc = await resLoc.json();
-    const [countryData] = loc.results;
+// const whereAmI = async function () {
+//   try {
+//     const pos = await getPosition();
+//     const { latitude: lat, longitude: lng } = pos.coords;
+//     const resLoc = await fetch(
+//       `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+//     );
+//     if (!resLoc.ok)
+//       throw new Error(`Can not get Country now ${response.status}`);
+//     const loc = await resLoc.json();
+//     const [countryData] = loc.results;
 
-    const res = await fetch(
-      `https://restcountries.com/v2/name/${countryData.country}`
-    );
+//     const res = await fetch(
+//       `https://restcountries.com/v2/name/${countryData.country}`
+//     );
 
-    if (!res.ok) throw new Error(`country not found ${response.status}`);
+//     if (!res.ok) throw new Error(`country not found ${response.status}`);
 
-    const data = await res.json();
-    const [result] = data;
-    renderCountry(result);
-    return `You are in ${countryData.state}, ${countryData.country}`;
-  } catch (err) {
-    renderError(`${err.message}`);
+//     const data = await res.json();
+//     const [result] = data;
+//     renderCountry(result);
+//     return `You are in ${countryData.state}, ${countryData.country}`;
+//   } catch (err) {
+//     renderError(`${err.message}`);
 
-    throw err;
-  }
-};
-console.log('Start');
+//     throw err;
+//   }
+// };
+// console.log('Start');
 // whereAmI()
 //   .then(res => console.log(res))
 //   .catch(err => console.error(err))
@@ -1466,13 +1466,35 @@ console.log('Start');
 //     console.log('Finish');
 //   });
 
-(async function () {
+// (async function () {
+//   try {
+//     const res = await whereAmI();
+//     console.log(res);
+//   } catch (err) {
+//     console.error(err);
+//   } finally {
+//     console.log('Finish');
+//   }
+// })();
+
+const get3Countries = async function (c1, c2, c3) {
   try {
-    const res = await whereAmI();
-    console.log(res);
+    // const [data1] = await getJSON(`https://restcountries.com/v2/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v2/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v2/name/${c3}`);
+
+    // console.log([data1.capital, data2.capital, data3.capital]);
+
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v2/name/${c1}`),
+      getJSON(`https://restcountries.com/v2/name/${c2}`),
+      getJSON(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0].capital));
   } catch (err) {
-    console.error(err);
-  } finally {
-    console.log('Finish');
+    console.Error(err.message);
   }
-})();
+};
+
+get3Countries('portugal', 'canada', 'tanzania');
