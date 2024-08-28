@@ -1445,14 +1445,34 @@ const whereAmI = async function () {
     const res = await fetch(
       `https://restcountries.com/v2/name/${countryData.country}`
     );
+
     if (!res.ok) throw new Error(`country not found ${response.status}`);
 
     const data = await res.json();
     const [result] = data;
     renderCountry(result);
+    return `You are in ${countryData.state}, ${countryData.country}`;
   } catch (err) {
     renderError(`${err.message}`);
+
+    throw err;
   }
 };
-whereAmI();
-console.log('First');
+console.log('Start');
+// whereAmI()
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err))
+//   .finally(() => {
+//     console.log('Finish');
+//   });
+
+(async function () {
+  try {
+    const res = await whereAmI();
+    console.log(res);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    console.log('Finish');
+  }
+})();
