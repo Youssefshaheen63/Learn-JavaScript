@@ -1291,40 +1291,82 @@ const getJSON = function (url, errorMsg = 'country not found') {
 
 // whereAmI(4.0383, 21.7587);
 
-const lotteryPromise = new Promise(function (resolve, reject) {
-  console.log('Lotter draw is happening ');
-  setTimeout(function () {
-    if (Math.random() >= 0.5) {
-      resolve('You Win 💰');
-    } else {
-      reject('You Lost 💩');
-    }
-  }, 2000);
-});
+// const lotteryPromise = new Promise(function (resolve, reject) {
+//   console.log('Lotter draw is happening ');
+//   setTimeout(function () {
+//     if (Math.random() >= 0.5) {
+//       resolve('You Win 💰');
+//     } else {
+//       reject('You Lost 💩');
+//     }
+//   }, 2000);
+// });
 
-lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+// lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
 // Promisifying setTimeout
 
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// wait(1)
+//   .then(() => {
+//     console.log('1 second passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('2 second passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('3 second passed');
+//     return wait(1);
+//   })
+//   .then(() => {
+//     console.log('4 second passed');
+//   });
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
 
-wait(1)
-  .then(() => {
-    console.log('1 second passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('2 second passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('3 second passed');
-    return wait(1);
-  })
-  .then(() => {
-    console.log('4 second passed');
-  });
+// getPosition().then(pos => console.log(pos));
+
+const whereAmI = function (lat, lng) {
+  getPosition()
+    .then(pos => {
+      console.log(pos);
+      const { latitude: lat, longitude: lng } = pos.coords;
+      return fetch(
+        `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&type=postcode&format=json&apiKey=930085ba2cec4fb3a399d1c73b6952e5`
+      );
+    })
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Can not get Country now ${response.status}`);
+
+      return response.json();
+    })
+    .then(data => {
+      const [res] = data.results;
+
+      console.log(`You are in ${res.state}, ${res.country}`);
+
+      return fetch(`https://restcountries.com/v2/name/${res.country}`);
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`country not found ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      renderCountry(data[0]);
+    })
+    .catch(err => console.log(err.message));
+};
+
+btn.addEventListener('click', whereAmI);
