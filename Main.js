@@ -1564,64 +1564,86 @@ const getJSON = function (url, errorMsg = 'country not found') {
 //   .catch(err => console.error(err));
 
 // Coding Challenge #3
-const wait = function (seconds) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
-  });
-};
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
 
-const createImg = function (imgPath) {
-  return new Promise(function (resolve, reject) {
-    const newImg = document.createElement('img');
-    newImg.src = imgPath;
-    newImg.addEventListener('load', function () {
-      images.append(newImg);
-      resolve(newImg);
-    });
+// const createImg = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const newImg = document.createElement('img');
+//     newImg.src = imgPath;
+//     newImg.addEventListener('load', function () {
+//       images.append(newImg);
+//       resolve(newImg);
+//     });
 
-    newImg.addEventListener('error', function () {
-      reject(new Error('Image not found'));
-    });
-  });
-};
+//     newImg.addEventListener('error', function () {
+//       reject(new Error('Image not found'));
+//     });
+//   });
+// };
 
-// Part 1
-const loadNPause = async function () {
-  try {
-    let img = await createImg('img/img-1.jpg');
-    console.log('1');
-    await wait(2);
-    img.style.display = 'none';
+// // Part 1
+// const loadNPause = async function () {
+//   try {
+//     let img = await createImg('img/img-1.jpg');
+//     console.log('1');
+//     await wait(2);
+//     img.style.display = 'none';
 
-    img = await createImg('img/img-2.jpg');
-    console.log('2');
-    await wait(2);
-    img.style.display = 'none';
+//     img = await createImg('img/img-2.jpg');
+//     console.log('2');
+//     await wait(2);
+//     img.style.display = 'none';
 
-    img = await createImg('img/img-3.jpg');
-    console.log('3');
-    await wait(2);
-    img.style.display = 'none';
-  } catch (e) {
-    console.error(e.message);
-  }
-};
+//     img = await createImg('img/img-3.jpg');
+//     console.log('3');
+//     await wait(2);
+//     img.style.display = 'none';
+//   } catch (e) {
+//     console.error(e.message);
+//   }
+// };
 
-// loadNPause();
+// // loadNPause();
 
-// Part 2
+// // Part 2
 
-const loadAll = async function (imgArr) {
-  try {
-    const imgs = imgArr.map(async img => await createImg(img));
-    console.log(imgs);
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImg(img));
+//     console.log(imgs);
 
-    const imgsPromises = await Promise.all(imgs);
-    console.log(imgsPromises);
+//     const imgsPromises = await Promise.all(imgs);
+//     console.log(imgsPromises);
 
-    imgsPromises.forEach(img => (img.className = 'parallel'));
-  } catch (e) {
-    console.error(e.message);
-  }
-};
-loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+//     imgsPromises.forEach(img => (img.className = 'parallel'));
+//   } catch (e) {
+//     console.error(e.message);
+//   }
+// };
+// loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+
+// Section Modern JavaScript Development Modules, Tooling, and Functional
+
+// Importing Module
+// import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
+// You can import everything at the same time using object
+import * as ShippingCart from './shoppingCart.js';
+console.log('Importing Module');
+ShippingCart.addToCart('Coat', 3);
+console.log(ShippingCart.totalPrice, ShippingCart.tq);
+
+// Can import the default export using any name
+import add, { cart } from './shoppingCart.js';
+add('T-shirt', 5);
+add('apples', 2);
+add('bread', 3);
+
+console.log(cart);
+
+// We can mix import named export and default
+// import add, { totalPrice, tq } from './shoppingCart.js';
