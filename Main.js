@@ -1700,15 +1700,30 @@ const getJSON = function (url, errorMsg = 'country not found') {
 // shoppingCart2.addToCart('pizza', 2);
 // console.log(shoppingCart2);
 
-
 // CommonJS uses in nodejs
 // Export
-export.addToCart = function (product, quantity) {
-	    cart.push({ product, quantity });
-	    console.log(`${quantity} ${product} added to cart`);
-	  };
-
+// export.addToCart = function (product, quantity) {
+// 	    cart.push({ product, quantity });
+// 	    console.log(`${quantity} ${product} added to cart`);
+// 	  };
 
 // Import
-const { addToCart } = require( "./shoppingCart.js");
+// const { addToCart } = require( "./shoppingCart.js");
 // require not defiend in our browser environment but defined in nodejs because is part of CommonJS specification
+
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 5 },
+  ],
+  user: { loggedIn: true },
+};
+
+const stateClone = Object.assign({}, state);
+const stateDeepClone = cloneDeep(state);
+
+state.user.loggedIn = false;
+console.log(stateClone);
+console.log(stateDeepClone);
