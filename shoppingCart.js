@@ -1,6 +1,15 @@
 // Exporting Module
 console.log('Exporting Module');
 
+// Blocking code
+/*
+in fact blocking the excution, not only in this module
+but also in the module that is importing it
+*/
+// console.log('Start Fetching users');
+// await fetch('https://jsonplaceholder.typicode.com/users');
+// console.log('End Fetching users');
+
 const shippingCost = 10;
 export const cart = [];
 

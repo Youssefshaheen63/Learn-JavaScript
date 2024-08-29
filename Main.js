@@ -1647,3 +1647,28 @@ console.log(cart);
 
 // We can mix import named export and default
 // import add, { totalPrice, tq } from './shoppingCart.js';
+
+/* await keyword at the 
+  top level block the entire code 
+  */
+// const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+// const data = await res.json();
+// console.log(data);
+
+const lastPost = async function () {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await res.json();
+
+  return { title: data.at(-1).title, body: data.at(-1).body };
+};
+
+// return Promise from the async function
+const last = lastPost();
+console.log(last);
+
+// Not very clean
+// last.then(last => console.log(last));
+
+// await here is useful
+const last2 = await lastPost();
+console.log(last2);
