@@ -1638,12 +1638,12 @@ const getJSON = function (url, errorMsg = 'country not found') {
 // console.log(ShippingCart.totalPrice, ShippingCart.tq);
 
 // // Can import the default export using any name
-// import add, { cart } from './shoppingCart.js';
-// add('T-shirt', 5);
-// add('apples', 2);
-// add('bread', 3);
+import add, { cart } from './shoppingCart.js';
+add('T-shirt', 5);
+add('apples', 2);
+add('bread', 3);
 
-// console.log(cart);
+console.log(cart);
 
 // We can mix import named export and default
 // import add, { totalPrice, tq } from './shoppingCart.js';
@@ -1711,7 +1711,8 @@ const getJSON = function (url, errorMsg = 'country not found') {
 // const { addToCart } = require( "./shoppingCart.js");
 // require not defiend in our browser environment but defined in nodejs because is part of CommonJS specification
 
-import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es';
 
 const state = {
   cart: [
@@ -1727,3 +1728,26 @@ const stateDeepClone = cloneDeep(state);
 state.user.loggedIn = false;
 console.log(stateClone);
 console.log(stateDeepClone);
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+class Person {
+  #greeting = 'Hey';
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.#greeting} ${this.name}`);
+  }
+}
+const usef = new Person('Usef');
+
+console.log(cart.find(el => el.quantity >= 2));
+
+Promise.resolve('TEST').then(x => console.log(x));
+
+import 'core-js/stable'; // iclude every thing u need or not
+// import 'core-js/stable/array/find.js'; // if u need just find method
+
+// Is for Polifilling async functions
+import 'regenerator-runtime/runtime.js';

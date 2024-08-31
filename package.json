@@ -1,15 +1,23 @@
 {
   "name": "js-learn-with-jonas",
   "version": "1.0.0",
-  "main": "Main.js",
+  "targets": {
+    "main": false
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "Usef",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "core-js": "^3.38.1",
     "leaflet": "^1.9.4",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "regenerator-runtime": "^0.14.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0"
   }
 }
